@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Casts\Json;
 class OrderController extends Controller
 {
     public function checkout(Request $request)
-    {   
+    {
         // autentikasi User
         $user = Auth::user();
         // masukan ke dalam variabel
@@ -25,7 +25,7 @@ class OrderController extends Controller
 
         // hitung total harga
         $totalPrice = 0;
-        foreach ($cartItems as $cart) 
+        foreach ($cartItems as $cart)
         {
             $totalPrice += $cart->product->price * $cart->quantity;
         }
@@ -41,7 +41,7 @@ class OrderController extends Controller
         foreach ($cartItems as $cart){
             OrderDetail::create([
                 'order_id' => $order->id,
-                'product_id' => $cart->id,
+                'product_id' => $cart->product_id,
                 'quantity' => $cart->quantity,
                 'price' => $cart->product->price
             ]);
@@ -95,6 +95,6 @@ class OrderController extends Controller
         // update status order
         $order->update(['status' => $request->status]);
 
-        return response()->json(['message' => 'Status Pesanan diupdate menjadi'. $request->status]);
+        return response()->json(['message' => 'Status Pesanan diupdate menjadi'.''. $request->status]);
     }
 }
