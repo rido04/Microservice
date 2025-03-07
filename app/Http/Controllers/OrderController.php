@@ -54,4 +54,47 @@ class OrderController extends Controller
 
         return response()->json(['message' => 'Checkout Berhasil1', 'order'=>$order], 201);
     }
+
+    public function pay(Request $request, $orderId){
+        $user = Auth::user();
+        $order = Order::where('id', $orderId)->where('user_id',$user->id)->first();
+
+        // validasi order
+        if(!$order){
+            return response()->json(['message' => "Order Tidak ditemukan!"], 404);
+        }
+
+        // validasi status
+        if($order->status !== 'pending'){
+            return response()->json(['message' => "Pesanan sedang di proses admin!"], 400);
+        }
+        // update status pesanan
+        $order->update(['status' => 'waiting_confirmation']);
+        return response()->json(['message' => 'Bukti Pembayaran sudah dikirim, menunggu verifikasi admin']);
+    }
+
+    public function verifyPayment(Request $request, $orderId){
+
+        // temukan order ID
+        $order = Order::find($orderId);
+
+        // kalau tidak ada order
+        if(!$order){
+            return response()->json(['message' => 'Order Tidak Ditemukan!'], 404);
+        }
+        // kalau ada order
+        if($order->status !== 'waiting_confirmation'){
+            return response()->json(['message' => 'Order tidak bisa diverifikasi'],400);
+        }
+
+        // validasi status payment
+        $request->validate([
+            'status' => 'required|in:paid,rejected'
+        ]);
+
+        // update status order
+        $order->update(['status' => $request->status]);
+
+        return response()->json(['message' => 'Status Pesanan diupdate menjadi'. $request->status]);
+    }
 }

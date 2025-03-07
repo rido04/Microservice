@@ -23,6 +23,9 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('/cart', [CartController::class, 'viewCart']);
     Route::put('/cart/{id}' , [CartController::class, 'updateCart']);
     Route::delete('/cart/{id}', [CartController::class, 'removeFromCart']);
-   //Routes Checkout
-   Route::post('/checkout', [OrderController::class, 'checkout']);
+    //Routes Checkout
+    Route::post('/checkout', [OrderController::class, 'checkout']);
+    //Routes Payment
+    Route::post('/payments/{order_id}',[OrderController::class, 'pay']);
+    Route::put('/admin/payments/{order_id}',[OrderController::class, 'verifyPayment']);
 });
