@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 
 Route::post('/register', [AuthController::class, 'register']);
@@ -22,4 +23,6 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('/cart', [CartController::class, 'viewCart']);
     Route::put('/cart/{id}' , [CartController::class, 'updateCart']);
     Route::delete('/cart/{id}', [CartController::class, 'removeFromCart']);
+   //Routes Checkout
+   Route::post('/checkout', [OrderController::class, 'checkout']);
 });
