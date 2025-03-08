@@ -28,4 +28,8 @@ Route::middleware('auth:sanctum')->group(function(){
     //Routes Payment
     Route::post('/payments/{order_id}',[OrderController::class, 'pay']);
     Route::put('/admin/payments/{order_id}',[OrderController::class, 'verifyPayment']);
+    // Routes Order details
+    Route::get('/orders', [OrderController::class, 'listOrders']);
+    Route::put('/orders/{orderid}/status', [OrderController::class, 'updateOrderStatus']);
+    Route::get('/my-orders', [OrderController::class, 'myOrders']);
 });

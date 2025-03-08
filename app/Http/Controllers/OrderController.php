@@ -97,4 +97,50 @@ class OrderController extends Controller
 
         return response()->json(['message' => 'Status Pesanan diupdate menjadi'.''. $request->status]);
     }
+
+    public function listOrders()
+    {
+        // Admin Melihat Semua Order
+        $orders = Order::with('user', 'orderDetails.product')->get();
+        return response()->json($orders);
+    }
+
+    public function updateOrderStatus(Request $request, $orderId)
+    {
+        // validasi status
+        $request->validate([
+            'order_status' => 'required|in:pending,diproses,dikirim,selesai'
+        ]);
+
+        // query order
+        $order = Order::find($orderId);
+
+        // jika order tidak ditemukan
+        if(!$order) {
+            return response()->json(['message' => 'Order Tidak Ditemukan'], 404);
+        }
+
+        // Jika order ditemukan
+        if($order->status !=='paid'){
+            return response()->json(['message' => 'Pesanan anda belum di bayar!', 400]);
+        }
+
+        // update order jika ditemukan
+        $order->update([
+            'order_status' =>$request->order_status
+        ]);
+
+        return response()->json(['message' => 'Status Diperbarui', 'order' =>$order]);
+    }
+
+    public function myOrders()
+    {
+        // validasi user
+        $user = Auth::user();
+
+        // query dan relasi ke user id
+        $orders = Order::where('user_id', $user->id)->with('orderDetails.product')->get();
+
+        return response()->json($orders);
+    }
 }

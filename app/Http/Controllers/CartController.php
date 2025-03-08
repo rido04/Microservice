@@ -10,11 +10,13 @@ class CartController extends Controller
 {
     public function addToCart(Request $request)
     {
+        // validasi yang harus di isi
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1'
         ]);
 
+        // autentikasi user
         $user = Auth::user();
 
         // cek apakah produk sudah ada di keranjang
@@ -40,10 +42,13 @@ class CartController extends Controller
 
     public function viewCart()
     {
+        // autentikasi user
         $user = Auth::user();
 
+        // ambil relasi dari user
         $cartItems = Cart::with('product')->where('user_id', $user->id)->get();
 
+        // hitung subtotal harga
         $totalPrice = 0;
         $cartData = $cartItems->map(function($cart) use($totalPrice){
             $subtotal = $cart->product->price * $cart->quantity;
@@ -58,6 +63,7 @@ class CartController extends Controller
             ];
         });
 
+        // kembalikan response json
         return response()->json([
             'items' => $cartData,
             'total_price' => $totalPrice
@@ -66,18 +72,24 @@ class CartController extends Controller
 
     public function updateCart(Request $request, $id)
     {
+        // validasi dengan quantity
         $request->validate([
             'quantity' => 'required|integer|min:1'
         ]);
 
+        // autentikasi user
         $user = Auth::user();
+
+        // relasi cart ke user_id
         $cartItem = Cart::where('id',$id)->where('user_id' ,$user->id)->first();
 
+        // jika cart atau keranjang kosong
         if(!$cartItem)
         {
             return response()->json(['message' => 'item tidak ditemukan di keranjang!'], 404);
         }
 
+        // update cart atau keranjang
         $cartItem->update([
             'quantity' => $request->quantity
         ]);
@@ -87,14 +99,19 @@ class CartController extends Controller
 
     public function removeFromCart($id)
     {
+        // autentikasi user
         $user = Auth::user();
+
+        // relasi ke user_id
         $cartItem = Cart::where('id', $id)->where('user_id', $user->id)->first();
 
+        // jika user belum login
         if(!$cartItem)
         {
             return response()->json(['message' => 'item gagal di hapus']);
         }
 
+        // hapus barang di keranjang
         $cartItem->delete();
 
         return response()->json(['message' => 'Item di hapus!']);
