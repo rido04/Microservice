@@ -44,7 +44,24 @@ class CartController extends Controller
 
         $cartItems = Cart::with('product')->where('user_id', $user->id)->get();
 
-        return response()->json($cartItems);
+        $totalPrice = 0;
+        $cartData = $cartItems->map(function($cart) use($totalPrice){
+            $subtotal = $cart->product->price * $cart->quantity;
+            $totalPrice += $subtotal;
+            return [
+                'id' => $cart->id,
+                'product_id' => $cart->product->id,
+                'product_name' => $cart->product->name,
+                'quantity' => $cart->quantity,
+                'price' => $cart->product->price,
+                'subtotal' => $subtotal
+            ];
+        });
+
+        return response()->json([
+            'items' => $cartData,
+            'total_price' => $totalPrice
+        ]);
     }
 
     public function updateCart(Request $request, $id)
