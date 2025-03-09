@@ -122,7 +122,7 @@ class OrderController extends Controller
 
         // Jika order ditemukan
         if($order->status !=='paid'){
-            return response()->json(['message' => 'Pesanan anda belum di bayar!', 400]);
+            return response()->json(['message' => 'Pesanan anda belum di bayar!'],400);
         }
 
         // update order jika ditemukan
