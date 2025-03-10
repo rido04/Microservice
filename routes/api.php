@@ -9,6 +9,9 @@ use App\Http\Controllers\ProductController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+// Route publik tanpa auth
+Route::get('/products', [ProductController::class, 'index']);
+Route::get('/products/{id}', [ProductController::class, 'show']);
 
 // route logout dan get profile
 Route::middleware('auth:sanctum')->group(function(){
@@ -41,4 +44,5 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function(){
         Route::post('/checkout', [OrderController::class, 'checkout']);
         // rutes order
         Route::get('/my-orders', [OrderController::class, 'myOrders']);
+        Route::get('/products', [ProductController::class, 'index']);
 });
