@@ -10,7 +10,7 @@ class ProductFrontendController extends Controller
 {
     public function index()
     {
-        $response = Http::timeout(60)->get(config('app.url') . '/api/products');
+        $response = Http::get(config('app.url') . '/api/products');
 
         if ($response->successful()) {
             $products = $response->json();

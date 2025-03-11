@@ -11,11 +11,11 @@ class ProductList extends Component
 
     public function mount()
     {
-        $response = Http::timeout(60)->get(config('app.url') . '/api/products');
+        $api_url = env('API_URL', '/products');
+        $response = Http::get($api_url);
 
-        if ($response->successful()) {
-            $this->products = $response->json();
-        }
+        $this->products = $response->json();
+
     }
 
     public function render()
