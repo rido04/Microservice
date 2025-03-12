@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
@@ -11,11 +11,12 @@ class ProductList extends Component
 
     public function mount()
     {
-        $api_url = env('API_URL', '/products');
-        $response = Http::get($api_url);
-
-        $this->products = $response->json();
-
+        $response = Http::get(config('app.url') . '/products');
+        if ($response->successful()) {
+            $this->products = $response->json();
+        } else {
+            dd($response->body()); // Tambahkan ini untuk debugging
+        }
     }
 
     public function render()

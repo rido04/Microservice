@@ -10,13 +10,10 @@ use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
 // Route publik tanpa auth
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
-
-Route::middleware([EnsureFrontendRequestsAreStateful::class])->group(function () {
-    Route::get('/products', [ProductController::class, 'index']);
-});
 
 // route logout dan get profile
 Route::middleware('auth:sanctum')->group(function(){
@@ -36,18 +33,19 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function(){
     Route::put('/orders/{orderid}/status', [OrderController::class, 'updateOrderStatus']);
 });
 
-
 Route::middleware(['auth:sanctum', 'role:customer'])->group(function(){
-        // routes payment customer
-        Route::post('/payments/{order_id}',[OrderController::class, 'pay']);
-        // crud cart
-        Route::post('/cart/add', [CartController::class, 'addToCart']);
-        Route::get('/cart', [CartController::class, 'viewCart']);
-        Route::put('/cart/{id}' , [CartController::class, 'updateCart']);
-        Route::delete('/cart/{id}', [CartController::class, 'removeFromCart']);
-        //Routes Checkout
-        Route::post('/checkout', [OrderController::class, 'checkout']);
-        // rutes order
-        Route::get('/my-orders', [OrderController::class, 'myOrders']);
-        Route::get('/products', [ProductController::class, 'index']);
+    // routes payment customer
+    Route::post('/payments/{order_id}',[OrderController::class, 'pay']);
+    // crud cart
+    Route::post('/cart/add', [CartController::class, 'addToCart']);
+    Route::get('/cart', [CartController::class, 'viewCart']);
+    Route::put('/cart/{id}' , [CartController::class, 'updateCart']);
+    Route::delete('/cart/{id}', [CartController::class, 'removeFromCart']);
+    //Routes Checkout
+    Route::post('/checkout', [OrderController::class, 'checkout']);
+    // rutes order
+    Route::get('/my-orders', [OrderController::class, 'myOrders']);
+    // routes unuk get produk customer
+    Route::get('/products', [ProductController::class, 'index']);
+    Route::get('/products/{id}', [ProductController::class, 'show']);
 });
