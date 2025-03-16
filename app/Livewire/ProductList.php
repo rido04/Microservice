@@ -11,16 +11,18 @@ class ProductList extends Component
 
     public function mount()
     {
-        $response = Http::get(config('app.url') . '/products');
+        $response = Http::get(config('app.url') . '/api/products');
+
         if ($response->successful()) {
             $this->products = $response->json();
         } else {
-            dd($response->body()); // Tambahkan ini untuk debugging
+            // Tambahkan debugging untuk melihat respons API
+            dd($response->body());
         }
     }
 
     public function render()
     {
-        return view('livewire.product-list');
+        return view('livewire.product-list', ['products' => $this->products]);
     }
 }

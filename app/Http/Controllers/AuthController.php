@@ -7,6 +7,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * @OA\OpenApi(
+ *     @OA\Info(
+ *         title="API Showcase",
+ *         version="1.0.0",
+ *         description="Dokumentasi API untuk proyek personal branding."
+ *     ),
+ *     @OA\Server(
+ *         url=L5_SWAGGER_CONST_HOST,
+ *         description="Server utama"
+ *     )
+ * )
+ */
+
 class AuthController extends Controller
 {
     public function register(Request $request)

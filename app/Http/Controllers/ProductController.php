@@ -10,6 +10,13 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
+    /**
+ * @OA\Get(
+ *     path="/api/products",
+ *     summary="Get all products",
+ *     @OA\Response(response=200, description="List of products")
+ * )
+ */
     public function index()
     {
         return response()->json(Product::with('category')->get());

@@ -10,6 +10,11 @@ Route::get('/', function () {
     return view('pages.home');
 })->name('home');
 
+//Route Showcase Api
+ROute::get('api-showcase', function(){
+    return view('api-showcase');
+})->name('api-showcase');
+
 // Halaman Login & Register
 Route::get('/login', function () {
     return view('auth.login');
@@ -24,7 +29,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 // Halaman Produk (Pakai Controller, supaya bisa ambil data dari API)
-Route::get('/products', [ProductController::class, 'index'])->name('products');
+Route::get('/products', [ProductFrontendController::class, 'index'])->name('products');
 
 // Halaman yang butuh login
 Route::middleware('auth')->group(function () {

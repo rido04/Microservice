@@ -1,4 +1,13 @@
 <?php
+/**
+ * @OA\OpenApi(
+ *     @OA\Info(
+ *         title="API Showcase",
+ *         version="1.0.0",
+ *         description="Dokumentasi API untuk proyek personal branding."
+ *     )
+ * )
+ */
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -12,13 +21,13 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 // Route publik tanpa auth
-Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
 
 // route logout dan get profile
 Route::middleware('auth:sanctum')->group(function(){
     Route::get('/logout',[AuthController::class, 'logout']);
     Route::get('/profile', [AuthController::class, 'profile']);
+    Route::get('/products', [ProductController::class, 'index']);
 });
 
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function(){
@@ -30,6 +39,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function(){
     Route::put('/admin/payments/{order_id}',[OrderController::class, 'verifyPayment']);
     // Routes Order status
     Route::get('/orders', [OrderController::class, 'listOrders']);
+    // routes order status by id
     Route::put('/orders/{orderid}/status', [OrderController::class, 'updateOrderStatus']);
 });
 
@@ -45,7 +55,8 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function(){
     Route::post('/checkout', [OrderController::class, 'checkout']);
     // rutes order
     Route::get('/my-orders', [OrderController::class, 'myOrders']);
-    // routes unuk get produk customer
+    // routes get produk customer
     Route::get('/products', [ProductController::class, 'index']);
+    // route get produk by id
     Route::get('/products/{id}', [ProductController::class, 'show']);
 });
